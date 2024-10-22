@@ -4,48 +4,85 @@ import 'dart:html';
 import 'dart:convert';
 import 'package:http/http.dart';
 
+var station = 'Leuven';
+
 void main() async {
-  document.activeElement!.addEventListener('keydown', _handleDPad);
+  document.activeElement!.addEventListener(
+    'keydown',
+    (event) => _handleKeyDown(
+      event,
+      onKeyDown: (key) {
+        if (key == 'Enter') {
+          showToast('Not implemented');
+        }
 
-  final station = 'Leuven';
-  querySelector('#header')?.text = '$station Liveboard';
-  final liveboard = await fetchLiveboard(station);
+        if (key == 'SoftRight') {
+          reloadLiveboard();
+        }
 
-  final date = DateTime.now();
-  final buffer = DivElement();
+        if (key == 'SoftLeft') {
+          station = station == 'Leuven' ? 'Brussels-Central' : 'Leuven';
+          reloadLiveboard();
+        }
+      },
+    ),
+  );
 
-  for (var departure in liveboard.sortedDepartures) {
-    final div = DivElement()
-      ..classes.addAll(['list-item-icon', 'focusable'])
-      ..setAttribute('tabindex', '0')
-      ..append(
-        DivElement()
-          ..classes.add('platform-square')
-          ..append(
-            ParagraphElement()
-              ..classes.add('list-item__text')
-              ..text = departure.platform,
-          ),
-      )
-      ..append(
-        DivElement()
-          ..classes.add('list-item-icon__text-container')
-          ..append(
-            ParagraphElement()
-              ..classes.add('list-item-icon__text')
-              ..text = departure.station,
-          )
-          ..append(
-            ParagraphElement()
-              ..classes.add('list-item-icon__subtext')
-              ..text = formatTime(departure.time.difference(date)),
-          ),
-      );
+  reloadLiveboard();
+}
 
-    buffer.append(div);
+void reloadLiveboard() async {
+  showToast('Refreshing trains...');
+
+  try {
+    querySelector('#header')?.text = '$station Liveboard';
+    final content = querySelector('#content')!;
+    content.children.clear();
+
+    final liveboard = await fetchLiveboard(station);
+
+    final date = DateTime.now();
+    final buffer = DivElement();
+
+    for (var departure in liveboard.sortedDepartures) {
+      final div = DivElement()
+        ..classes.addAll(['list-item-icon', 'focusable'])
+        ..setAttribute('tabindex', '0')
+        ..append(
+          DivElement()
+            ..classes.add('platform-square')
+            ..append(
+              ParagraphElement()
+                ..classes.add('list-item__text')
+                ..text = departure.platform,
+            ),
+        )
+        ..append(
+          DivElement()
+            ..classes.add('list-item-icon__text-container')
+            ..append(
+              ParagraphElement()
+                ..classes.add('list-item-icon__text')
+                ..text = departure.station,
+            )
+            ..append(
+              ParagraphElement()
+                ..classes.add('list-item-icon__subtext')
+                ..text =
+                    '${departure.time.hour.toString().padLeft(2, '0')}:${departure.time.minute.toString().padLeft(2, '0')} • ${formatTime(departure.time.difference(date))}',
+            ),
+        )
+        ..append(
+          SpanElement()..classes.add('list-item-indicator__indicator'),
+        );
+
+      buffer.append(div);
+    }
+
+    content.children.addAll(buffer.children);
+  } catch (e) {
+    showToast('Failed to load trains');
   }
-
-  querySelector('#content')?.replaceWith(buffer);
 }
 
 String formatTime(Duration duration) {
@@ -75,18 +112,23 @@ void showToast(String body) {
   );
 }
 
-void _handleDPad(Event event) {
-  if (event is! KeyboardEvent) return;
-
-  print('Key: ${event.key}');
+void _handleKeyDown(
+  Event event, {
+  void Function(String key)? onKeyDown,
+}) {
+  if (event is! KeyboardEvent || event.key == null) return;
 
   final move = switch (event.key) {
     'ArrowUp' => -1,
     'ArrowDown' => 1,
     'ArrowLeft' => -1,
     'ArrowRight' => 1,
-    _ => 0,
+    _ => null,
   };
+
+  if (move == null) {
+    return onKeyDown?.call(event.key!);
+  }
 
   final items = document.querySelectorAll('.focusable');
   final next = items.indexOf(document.activeElement) + move;

@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "name": "NMBS/SNCB",
+  "description": "Train schedule for Belgium.",
+  "type": "web",
+  "launch_path": "/index.html",
+  "icons": {
+    "56": "/icons/kaios_56.png",
+    "112": "/icons/kaios_112.png"
+  },
+  "theme_color": "#006AB3",
+  "background_color": "#000000",
+  "developer": {
+    "name": "Ilia Breitburg",
+    "url": "https://breitburg.com/"
+  }
+}

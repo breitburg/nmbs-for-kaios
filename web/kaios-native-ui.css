@@ -112,33 +112,33 @@
   background: var(--item-focused-background);
 }
 
-.progress-container:focus > .progress-container__label,
-.selected > .slider-container__text,
-.list-item-indicator:focus > .list-item-indicator__text,
+.progress-container:focus>.progress-container__label,
+.selected>.slider-container__text,
+.list-item-indicator:focus>.list-item-indicator__text,
 .list-item-icon:focus .list-item-icon__text,
-.list-item:focus > .list-item__text,
-.selected > .checkbox-container__text,
-.selected > .radio-container__text {
+.list-item:focus>.list-item__text,
+.selected>.checkbox-container__text,
+.selected>.radio-container__text {
   color: var(--item-focused-text-color);
 }
 
-.selected > .slider-container__subtext,
-.list-item-indicator:focus > .list-item-indicator__subtext,
+.selected>.slider-container__subtext,
+.list-item-indicator:focus>.list-item-indicator__subtext,
 .list-item-icon:focus .list-item-icon__subtext,
-.list-item:focus > .list-item__subtext,
-.selected > .checkbox-container__subtext,
-.selected > .radio-container__subtext,
-.selected > .input-container__label,
-.selected > .textarea-container__label {
+.list-item:focus>.list-item__subtext,
+.selected>.checkbox-container__subtext,
+.selected>.radio-container__subtext,
+.selected>.input-container__label,
+.selected>.textarea-container__label {
   color: var(--item-focused-subtext-color);
 }
 
 /* ikr, i hate !important too but i dont want to think out other solution. */
-.selected > .radio-container__radio {
+.selected>.radio-container__radio {
   background: var(--radio-color-focused) !important;
 }
 
-.selected > .checkbox-container__checkbox {
+.selected>.checkbox-container__checkbox {
   background: var(--checkbox-color-focused) !important;
 }
 
@@ -150,10 +150,12 @@ body {
   margin: 0;
 }
 
+
 #app {
   background: var(--app-background);
   width: 100vw;
-  height: 100%;
+  padding-bottom: 3.5rem; /* Add padding equal to the height of .softkeys plus some extra space */
+
 }
 
 #content {
@@ -283,7 +285,7 @@ body {
   top: 50%;
 }
 
-.list-item-indicator:focus > .list-item-indicator__indicator {
+.list-item-indicator:focus>.list-item-indicator__indicator {
   border-color: var(--item-focused-subtext-color);
 }
 
@@ -416,13 +418,13 @@ body {
   clip-path: url("checkboxes-radios/radio-on-kaios-2.5.3.svg#radio");
 }
 
-.radio-container__input + .radio-container__radio {
+.radio-container__input+.radio-container__radio {
   background: var(--radio-color);
   /* you can change it to "checkboxes-radios/radio-off-kaios-2.5.svg". Remember change the clip-path url of the pseudo-elements! */
   clip-path: url("checkboxes-radios/radio-off-kaios-2.5.3.svg#radio");
 }
 
-.radio-container__input:checked + .radio-container__radio {
+.radio-container__input:checked+.radio-container__radio {
   /* you can change it to "checkboxes-radios/radio-on-kaios-2.5.svg". Remember change the clip-path url of the pseudo-elements! */
   clip-path: url("checkboxes-radios/radio-on-kaios-2.5.3.svg#radio");
 }
@@ -476,13 +478,13 @@ body {
   clip-path: url("checkboxes-radios/checkbox-on-kaios-2.5.3.svg#checkbox");
 }
 
-.checkbox-container__input + .checkbox-container__checkbox {
+.checkbox-container__input+.checkbox-container__checkbox {
   background: var(--checkbox-color);
   /* you can change it to "checkboxes-radios/checkbox-on-kaios-2.5.svg#checkbox". Remember change the clip-path url of the pseudo-elements! */
   clip-path: url("checkboxes-radios/checkbox-off-kaios-2.5.3.svg#checkbox");
 }
 
-.checkbox-container__input:checked + .checkbox-container__checkbox {
+.checkbox-container__input:checked+.checkbox-container__checkbox {
   /* you can change it to "checkboxes-radios/checkbox-on-kaios-2.5.svg#checkbox". Remember change the clip-path url of the pseudo-elements! */
   clip-path: url("checkboxes-radios/checkbox-on-kaios-2.5.3.svg#checkbox");
 }
@@ -531,11 +533,11 @@ body {
   border-right: none;
 }
 
-.progress-container:focus > .progress-container__progress {
+.progress-container:focus>.progress-container__progress {
   background: var(--progress-focused-color);
 }
 
-.progress-container:focus > .progress-container__progress::-moz-progress-bar {
+.progress-container:focus>.progress-container__progress::-moz-progress-bar {
   background: var(--progress-focused-selected);
   border-right-color: var(--item-focused-background);
 }
@@ -681,7 +683,6 @@ body {
 }
 
 /* Software Keys */
-
 .softkeys,
 .softkeys-icon {
   box-sizing: border-box;
@@ -693,6 +694,11 @@ body {
   height: 3rem;
   background: var(--softkeys-background);
   color: var(--softkeys-color);
+
+  /* Positioning to snap to the bottom and follow the scroll */
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 .softkey {
